@@ -1,51 +1,52 @@
 package bowling_game_kata;
 
+import org.hamcrest.Matcher;
+
 public class Game {
 
-    public static final int FRAME_SIZE = 10;
     private int[] rolls = new int[21];
-    private int currentRole;
+    private int currentRoll = 0;
 
     public void roll (int pins) {
-        rolls[currentRole++] = pins;
-
+        rolls[currentRoll++] = pins;
     }
 
-    public int score () {
-        int score = 0;
-        int frameIndex = 0;
-        for (int i = 0; i < FRAME_SIZE; i++) {
-            if (isStrike(frameIndex)) { //strike
-                score += 10 + strikeBonus(frameIndex);
-                frameIndex++;
-            } else if(isSpare(frameIndex)) { //spare
-                score += 10 + spareBonus(frameIndex);
-                frameIndex += 2;
+    public int getScore() {
+        int score =0;
+        int rollIndex = 0;
+        for (int frameIndex = 0; frameIndex < 10; frameIndex++) {
+            if (isStrike(rollIndex)) {
+                score += getStrikeScore(rollIndex);
+                rollIndex++;
+            } else if (isSpare(rollIndex)) {
+                score += getSpareScore(rollIndex);
+                rollIndex += 2;
             } else {
-                score += sumOfAllInFrame(frameIndex);
-                frameIndex += 2;
+                score += getStandardScore(rollIndex);
+                rollIndex += 2;
             }
+
         }
-        return (score);
+        return score;
     }
 
-    private int strikeBonus(int frameIndex) {
-        return rolls[frameIndex + 1] + rolls[frameIndex + 2];
+    private boolean isStrike(int rollIndex) {
+        return rolls[rollIndex] == 10;
     }
 
-    private int spareBonus(int frameIndex) {
-        return rolls[frameIndex + 2];
+    private int getStrikeScore(int rollIndex) {
+        return rolls[rollIndex] + rolls[rollIndex + 1] + rolls[rollIndex + 2];
     }
 
-    private int sumOfAllInFrame(int frameIndex) {
-        return rolls[frameIndex] + rolls[frameIndex + 1];
+    private boolean isSpare(int rollIndex) {
+        return rolls[rollIndex] + rolls[rollIndex + 1] == 10;
     }
 
-    private boolean isSpare(int frameIndex) {
-        return sumOfAllInFrame(frameIndex) == 10;
+    private int getSpareScore(int rollIndex) {
+        return rolls[rollIndex] + rolls[rollIndex + 1] + rolls[rollIndex + 2];
     }
 
-    private boolean isStrike(int frameIndex) {
-        return rolls[frameIndex] == 10;
+    private int getStandardScore(int rollIndex) {
+        return rolls[rollIndex] + rolls[rollIndex + 1];
     }
 }
