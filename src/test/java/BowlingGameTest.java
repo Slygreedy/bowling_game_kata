@@ -1,64 +1,60 @@
-import static org.junit.Assert.*;
-
 import bowling_game_kata.Game;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 public class BowlingGameTest {
 
     private Game game;
 
     @Before
-    public void initialise() {
-        game = new Game();
+    public void initialisation() {
+       game = new Game();
     }
 
     @Test
-    public void canRollGutterGame() {
-
+    public void canScoreGutterGame() {
         rollMany(0, 20);
-
-        assertEquals(0, game.getScore());
+        assertThat(game.score(), is(0));
     }
 
     @Test
-    public void canRollAllOnes() {
-
+    public void canScoreAllOnes() {
         rollMany(1, 20);
-
-        assertEquals(20, game.getScore());
+        assertThat(game.score(), is(20));
     }
 
     @Test
-    public void canRollSpare() {
+    public void canRollSpareFollowedByThree() {
         game.roll(5);
         game.roll(5);
         game.roll(3);
         rollMany(0, 17);
-        assertEquals(16, game.getScore());
+        assertThat(game.score(), is (16));
     }
 
     @Test
-    public void canRollStrike() {
+    public void canRollStrikeFollowedByThreeAndFour() {
         game.roll(10);
-        game.roll(4);
         game.roll(3);
+        game.roll(4);
         rollMany(0, 16);
-        assertEquals(24, game.getScore());
+        assertThat(game.score(), is(24));
     }
 
     @Test
     public void canRollPerfectGame() {
-        rollMany(10, 12);
-        assertEquals(300, game.getScore());
+        rollMany(10, 20);
+        assertThat(game.score(), is (300));
     }
 
-    private void rollMany(int pins, int rolls) {
-        for (int i = 0; i < rolls; i++) {
+    public void rollMany(int pins, int rolls) {
+        for(int i = 0; i < rolls; i++) {
             game.roll(pins);
         }
     }
 
-
 }
+
